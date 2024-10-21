@@ -1,14 +1,14 @@
 import { Todo } from "../models/todo.js";
 
 class todoController {
-    constructor(){
+    constructor() {
         this.TODOS = []
     }
 
-    createTodo(req,res) {
+    createTodo(req, res) {
         const task = req.body.task
         const newTodo = new Todo(Math.random().toString(), task)
-        
+
         this.TODOS.push(newTodo)
 
         res.json({
@@ -18,17 +18,17 @@ class todoController {
     }
 
     getTodos(req, res) {
-        res.json({tasks: this.TODOS})
+        res.json({ tasks: this.TODOS })
     }
 
-    updateTodo(req,res) {
+    updateTodo(req, res) {
         const todoId = req.params.id
         const updatedTask = req.body.task
         const todoIndex = this.TODOS.findIndex((todo) => todo.id === todoId)
 
-        if(todoIndex < 0) {
+        if (todoIndex < 0) {
             res.json({
-                message:"Could not find todo with such index"
+                message: "Could not find todo with such index"
             })
             throw new Error("Could not find todo!")
         }
@@ -38,6 +38,24 @@ class todoController {
             message: "updated todo",
             updatedTask: this.TODOS[todoIndex]
         })
+    }
+
+    deleteTodo(req, res) {
+        const todoId = req.params.id;
+        const todoIndex = this.TODOS.findIndex((todo) => todo.id === todoId);
+
+        if (todoIndex < 0) {
+            res.json({
+                message: "Could not find todo with such id",
+            });
+            throw new Error("Could not find todo to delete!")
+        }
+
+        this.TODOS.splice(todoIndex, 1); // Remove the todo from the array
+
+        res.json({
+            message: "Deleted todo successfully"
+        });
     }
 }
 
